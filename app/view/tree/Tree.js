@@ -19,10 +19,10 @@ Ext.define("datalap.model.Node", {
         { name: 'calc', type: 'string', persist: true, defaultValue: null },
         { name: 'type', type: 'string', persist: true, defaultValue: null },
         { name: 'leaf', persist: false },
-        { name: 'parentId', persist: false }
-        //{ name: 'children', type: 'array' },
-        //{ name: 'parents', type: 'array' },
-        //{ name: 'attributes', type: 'object' }
+        { name: 'parentId', persist: false },
+        { name: 'oriChildren', type: 'string' },
+        { name: 'parents', type: 'string' },
+        { name: 'attributes', type: 'string' }
     ],
     
     proxy: {
@@ -139,7 +139,14 @@ Ext.define("datalap.view.tree.Tree", {
         
         viewready: function(that, eOpts) {
             tree = that;
+        },
+        
+        selectionChange: function(model, records) {
+            var rec = records[0];
+            if (rec) {
+                Ext.global.editorform.loadRecord(rec);
+            }
         }
     }
-    
+        
 });

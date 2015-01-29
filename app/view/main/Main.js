@@ -1,50 +1,8 @@
-var vPanel = Ext.create('Ext.panel.Panel', {
-
-    requires: [
-        'Ext.layout.container.HBox'
-    ],
-    width: '100%',
-    height: '100%',
-    
-    layout: {
-        type: 'hbox',
-        pack: 'start',
-        align: 'stretch'
-    },
-        
-    defaults: {
-        frame: true,
-        margin: 10,
-        cmargin: 0
-    },
-
-    items: [{
-        title: "Tree",
-        collapsible: true,
-        collapseDirection: 'left',
-        flex: 3,
-        items:[{
-            region: 'north',
-            height: 1000,
-            xtype: 'maintree'
-        }]
-    }, {
-        title: 'Visualizer',
-        flex: 2,
-        collapsible: true,
-        collapseDirection: 'right'
-    }, {
-        title: 'Editor',
-        collapsible: true,
-        collapseDirection: 'right',
-        flex: 1
-    }]
-});
-
 Ext.define('datalap.view.main.Main', {
     extend: 'Ext.container.Container',
     
     requires: [
+        'datalap.view.main.Editor',
         'datalap.view.main.MainController',
         'datalap.view.main.MainModel'
     ],
@@ -75,9 +33,32 @@ Ext.define('datalap.view.main.Main', {
         }]
         
     }, {
-        region: 'west',
-        width: '100%',
+        region: 'center',
+        title: "Tree",
         xtype: 'panel',
-        items: [vPanel]
+        split: true,
+        items:[{
+            region: 'north',
+            xtype: 'maintree'
+        }]
+    }, {
+        xtype: 'panel',
+        bind: {
+            title: 'Visualizer'
+        },
+        region: 'east',
+        collapsible: true,
+        width: 250,
+        split: true
+    }, {
+        xtype: 'panel',
+        title: 'Editor',
+        collapsible: true,
+        region: 'east',
+        width: 250,
+        split: true,
+        items: [{
+            xtype: 'editorform'
+        }]
     }]
 });
