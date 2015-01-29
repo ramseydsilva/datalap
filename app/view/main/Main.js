@@ -32,7 +32,7 @@ Ext.define('datalap.view.main.Main', {
         }]
     },{
         region: 'center',
-        xtype: 'tabpanel',
+        xtype: 'panel',
         items:[{
             
             region: 'north',
