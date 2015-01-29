@@ -1,8 +1,58 @@
-var tree;
+var tree, store, newId;
 var cellEditor = Ext.create('Ext.grid.plugin.CellEditing', {
     listeners: {
         edit: function(editor, e) {
-            console.log("edited, commit to server");
+            store.sync();
+        }
+    }
+});
+
+Ext.define("datalap.model.Node", {
+    extend: "Ext.data.Model",
+    
+    idProperty: "_id",
+    
+    fields: [
+        { name: '_id', persist: false },
+        { name: 'name', type: 'string', persist: true, defaultValue: 'Child' },
+        { name: 'value', type: 'int', persist: true, defaultValue: null },
+        { name: 'calc', type: 'string', persist: true, defaultValue: null },
+        { name: 'type', type: 'string', persist: true, defaultValue: null },
+        { name: 'leaf', persist: false },
+        { name: 'parentId', persist: false }
+        //{ name: 'children', type: 'array' },
+        //{ name: 'parents', type: 'array' },
+        //{ name: 'attributes', type: 'object' }
+    ],
+    
+    proxy: {
+        type: 'rest',
+        url: "http://localhost:3000/datalap/nodes",
+        
+        reader: {
+            type: 'json',
+            transform: {
+                fn: function(data) {
+                    
+                    newId = data._id;
+                    
+                    if (data.forEach) {
+                        data.forEach(function(node) {
+                            node.leaf = true;
+                            if (node.children) {
+                                node.oriChildren = node.children;
+                                delete node.children;
+                                if (node.oriChildren.length) {
+                                    node.leaf = false;
+                                }
+                            }
+                        });
+                    }
+                    
+                    return data;
+                },
+                scope: this
+            }
         }
     }
 });
@@ -15,10 +65,16 @@ var menu = Ext.create('Ext.menu.Menu', {
         text: "Add Child",
         handler: function() {
             var node = tree.getSelection()[0];
-            var child = node.appendChild({
-                name: "Child",
-                leaf: true
+            var childNode = Ext.create("datalap.model.Node", {
+                leaf: true,
+                parents: [node.get("_id")]
             });
+            childNode.save({
+                success: function(n) {
+                    n.set("_id", newId);
+                }
+            });
+            var child = node.appendChild(childNode);
             node.expand(false, function() {
                 tree.getSelectionModel().select(child);
                 tree.getView().focusRow(child);
@@ -34,19 +90,19 @@ var menu = Ext.create('Ext.menu.Menu', {
         text: "Delete",
         handler: function() {
             var node = tree.getSelection()[0];
-            node.remove();
+            node.erase();
         }
    }]
 });
 
 
-var store = Ext.create('Ext.data.TreeStore', {
+store = Ext.create('Ext.data.TreeStore', {
     model: 'datalap.model.Node',
     rootVisible: false,
     listeners: {
         beforeload: function(store, operation, eOpts) {
             var node = operation.node;
-            if (node.get("id") == "root") {
+            if (node.get("_id") == "root") {
                 var params = {"query": '{"parents":[]}'};
             } else {
                 var params = {"query": '{"parents": {"$in": ["' + node.get("_id") + '"]} }'};
@@ -60,7 +116,6 @@ Ext.define("datalap.view.tree.Tree", {
            
     extend: 'Ext.tree.Panel',
     alias: "widget.maintree",
-    title: 'DataMap',
     rootVisible: false,
     store: store,
     focusable: false,

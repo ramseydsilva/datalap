@@ -4,16 +4,15 @@
  * details.
  */
 Ext.define('datalap.Application', {
+    
+    theme: "ext-theme-neptune",
+    
     extend: 'Ext.app.Application',
     
     name: 'datalap',
 
     stores: [
         // TODO: add global / shared stores here
-    ],
-
-    requires: [
-        'datalap.model.Node'
     ],
     
     views: [
@@ -23,7 +22,6 @@ Ext.define('datalap.Application', {
     ],
     
     models: [
-        'datalap.model.Node'
     ],
     
     launch: function () {

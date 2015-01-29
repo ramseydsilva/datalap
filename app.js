@@ -9,13 +9,8 @@ Ext.Loader.setConfig({
 });
 
 Ext.application({
+    
     name: 'datalap',
-
     extend: 'datalap.Application'
     
-    //-------------------------------------------------------------------------
-    // Most customizations should be made to datalap.Application. If you need to
-    // customize this file, doing so below this section reduces the likelihood
-    // of merge conflicts when upgrading to new versions of Sencha Cmd.
-    //-------------------------------------------------------------------------
 });

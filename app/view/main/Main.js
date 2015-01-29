@@ -1,5 +1,49 @@
+var vPanel = Ext.create('Ext.panel.Panel', {
+
+    requires: [
+        'Ext.layout.container.HBox'
+    ],
+    width: '100%',
+    height: '100%',
+    
+    layout: {
+        type: 'hbox',
+        pack: 'start',
+        align: 'stretch'
+    },
+        
+    defaults: {
+        frame: true,
+        margin: 10,
+        cmargin: 0
+    },
+
+    items: [{
+        title: "Tree",
+        collapsible: true,
+        collapseDirection: 'left',
+        flex: 3,
+        items:[{
+            region: 'north',
+            height: 1000,
+            xtype: 'maintree'
+        }]
+    }, {
+        title: 'Visualizer',
+        flex: 2,
+        collapsible: true,
+        collapseDirection: 'right'
+    }, {
+        title: 'Editor',
+        collapsible: true,
+        collapseDirection: 'right',
+        flex: 1
+    }]
+});
+
 Ext.define('datalap.view.main.Main', {
     extend: 'Ext.container.Container',
+    
     requires: [
         'datalap.view.main.MainController',
         'datalap.view.main.MainModel'
@@ -18,26 +62,22 @@ Ext.define('datalap.view.main.Main', {
     },
 
     items: [{
-        xtype: 'panel',
-        bind: {
-            title: '{name}'
+        region: 'north',
+        xtype: 'header',
+        title: "DataLap",
+        defaults: {
+            margin: '10px'
         },
-        region: 'west',
-        html: '<ul><li>This area is commonly used for navigation, for example, using a "tree" component.</li></ul>',
-        width: 250,
-        split: true,
-        tbar: [{
+        items: [{
+            xtype: 'button',
             text: 'Logout',
             handler: 'onClickButton'
         }]
-    },{
-        region: 'center',
+        
+    }, {
+        region: 'west',
+        width: '100%',
         xtype: 'panel',
-        items:[{
-            
-            region: 'north',
-            xtype: 'maintree'
-            
-        }]
+        items: [vPanel]
     }]
 });
