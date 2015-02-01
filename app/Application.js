@@ -12,16 +12,19 @@ Ext.define('datalap.Application', {
     name: 'datalap',
 
     stores: [
-        // TODO: add global / shared stores here
+        'Node'
     ],
     
     views: [
-        'datalap.view.tree.Tree',
-        'datalap.view.login.Login',
-        'datalap.view.main.Main'
+        'login.Login',
+        'main.Main',
+        'browser.Tree',
+        'visualizer.Sheet',
+        'editor.Editor'
     ],
     
     models: [
+        'Node'
     ],
     
     launch: function () {

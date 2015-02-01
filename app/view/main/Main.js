@@ -1,19 +1,18 @@
 Ext.define('datalap.view.main.Main', {
+    
     extend: 'Ext.container.Container',
     
     requires: [
-        'datalap.view.main.Editor',
         'datalap.view.main.MainController',
-        'datalap.view.main.MainModel'
+        'datalap.view.browser.Tree',
+        'datalap.view.editor.Editor',
+        'datalap.view.visualizer.Sheet'
     ],
 
     plugins: 'viewport',
     xtype: 'app-main',
     
     controller: 'main',
-    viewModel: {
-        type: 'main'
-    },
 
     layout: {
         type: 'border'
@@ -37,19 +36,22 @@ Ext.define('datalap.view.main.Main', {
         title: "Tree",
         xtype: 'panel',
         split: true,
+        width: 300,
         items:[{
             region: 'north',
-            xtype: 'maintree'
+            xtype: 'tree'
         }]
     }, {
         xtype: 'panel',
-        bind: {
-            title: 'Visualizer'
-        },
+        title: 'Visualizer',
         region: 'east',
         collapsible: true,
-        width: 250,
-        split: true
+        width: 450,
+        split: true,
+        items: [{
+            xtype: 'visualizer',
+            itemId: 'visualizer'
+        }]
     }, {
         xtype: 'panel',
         title: 'Editor',
